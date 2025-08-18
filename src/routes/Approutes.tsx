@@ -3,6 +3,7 @@ import MainLayout from '../layout/MainLayout';
 import DashBoard from '../pages/dashboard/DashBoard';
 import Profile from '../pages/profile/Profile';
 import Login from '../pages/auth/Login';
+import Verify from '../pages/auth/otp'
 import { useAuth } from '../Components/auth/AuthContext';
 
 function Approutes() {
@@ -13,6 +14,7 @@ function Approutes() {
   const AuthRoutes = () => (
     <Routes>
       <Route path='/login' element={<Login />} />
+      <Route path='/verification' element={<Verify />} />
       <Route path='*' element={<Navigate to='/login' />} />
     </Routes>
   );
