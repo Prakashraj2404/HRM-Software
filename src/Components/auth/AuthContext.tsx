@@ -12,9 +12,10 @@ import {
 } from '../../utils/localstorage';
 type AuthContextType = {
 	isAuthenticated: boolean;
-
+	isOtpAuthenticated: boolean;
 	isLoading: boolean;
 	login: (data: string) => void;
+	verifyOTP: (data: string) => void;
 	logout: () => void;
 };
 
@@ -22,19 +23,26 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+	const [isOtpAuthenticated, setOtpIsAuthenticated] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const token = GetLocalStorage('token');
-		// setIsAuthenticated(!!token);
-		setIsAuthenticated(true);
+		const token = GetLocalStorage('loginToken');
+		setIsAuthenticated(!!token);
+		setOtpIsAuthenticated(token ? false : true);
 		setIsLoading(false);
 	}, []);
 
 	const login = (data: any) => {
-		StoreLocalStorage('token', data?.token);
-		setIsAuthenticated(true);
+		StoreLocalStorage('otpToken', data?.token);
+		setOtpIsAuthenticated(true);
 	};
+
+	const verifyOTP = (data: any) => {
+		StoreLocalStorage('loginToken', data);
+		// setOtpIsAuthenticated(true);
+		setIsAuthenticated(true);
+	}
 
 	const logout = () => {
 		ClearLocalStorage();
@@ -42,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	return (
-		<AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
+		<AuthContext.Provider value={{ isAuthenticated, isLoading,isOtpAuthenticated, login, logout,verifyOTP }}>
 			{children}
 		</AuthContext.Provider>
 	);
